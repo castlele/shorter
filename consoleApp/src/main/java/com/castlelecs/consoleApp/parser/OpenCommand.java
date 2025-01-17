@@ -1,40 +1,32 @@
 package com.castlelecs.consoleApp.parser;
 
-import com.castlelecs.shorter.interactors.URIShortenerException;
+import java.awt.Desktop;
+import java.net.URI;
+
 import com.castlelecs.shorter.interactors.URIShortenerInteractor;
 import com.castlelecs.shorter.models.ShortURI;
 
 public class OpenCommand implements Command {
 
     private String shortURI;
-    private int timeLimit;
-    private int useLimit;
+    private String name;
+    private String id;
     private URIShortenerInteractor interactor;
 
     public OpenCommand(
         String shortURI,
-        int timeLimit,
-        int useLimit,
+        String name,
+        String id,
         URIShortenerInteractor interactor
     ) {
-        this.longURI = longURI;
+        this.shortURI = shortURI;
         this.name = name;
         this.id = id;
-        this.timeLimit = timeLimit;
-        this.useLimit = useLimit;
         this.interactor = interactor;
     }
 
     public String getShortURI() {
         return shortURI;
-    }
-
-    public int getTimeLimit() {
-        return timeLimit;
-    }
-
-    public int getUseLimit() {
-        return useLimit;
     }
 
     @Override
@@ -43,9 +35,21 @@ public class OpenCommand implements Command {
     }
 
     @Override
-    public void execute() throws URIShortenerException {
-        ShortURI uri = interactor.getShortURI(getShortURI());
+    public void execute() throws Exception {
+        ShortURI uri = interactor.getShortURI(getShortURI(), name, id);
 
-        uri.getLongURI();
+        if (uri.isExpired()) {
+            throw new OpenCommandException.Expired();
+        }
+
+        uri.decreaseUsage();
+
+        try {
+            Desktop
+                .getDesktop()
+                .browse(
+                    new URI(uri.getLongURI())
+                );
+        } catch (Exception e) {}
     }
 }

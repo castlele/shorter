@@ -64,6 +64,16 @@ public class ConvertCommandTests extends BaseCommandTests {
                     uriStorage.put(user, uris);
                 }
 
+                @Override
+                public ShortURI getShortURI(String shortURI, User user) {
+                    for (ShortURI uri : uriStorage.get(user)) {
+                        if (uri.getShortURI() == shortURI) {
+                            return uri;
+                        }
+                    }
+
+                    return null;
+                }
             }, new UsersDataStore() {
                 @Override
                 public void saveUser(User user) {

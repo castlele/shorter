@@ -15,12 +15,11 @@ public class CommandParser {
     private static final String AUTH_UUID = "--uuid";
     private static final String AUTH_NAME = "--name";
     private static final String CONVERT = "convert";
-    private static final String CONVERT_USER = "--user";
-    private static final String CONVERT_ID = "--id";
     private static final String CONVERT_TIME_LIMIT = "--timelimit";
     private static final String CONVERT_USE_LIMIT = "--uselimit";
-    private static final String CONVERT_IS_OPEN = "--open";
     private static final String OPEN = "open";
+    private static final String USER = "--user";
+    private static final String ID = "--id";
 
     private UsersDataStore userStorage;
 
@@ -41,6 +40,9 @@ public class CommandParser {
                 break;
             case CONVERT:
                 commands.add(createConvertCommand(reader));
+                break;
+            case OPEN:
+                commands.add(createOpenCommand(reader));
                 break;
             }
         }
@@ -80,17 +82,17 @@ public class CommandParser {
         int useLimit = -1;
 
         while (
-            reader.hasNext(CONVERT_USER)
-            || reader.hasNext(CONVERT_ID)
+            reader.hasNext(USER)
+            || reader.hasNext(ID)
             || reader.hasNext(CONVERT_TIME_LIMIT)
             || reader.hasNext(CONVERT_USE_LIMIT)
         ) {
             try {
                 switch (reader.next()) {
-                case CONVERT_USER:
+                case USER:
                     user = reader.next();
                     break;
-                case CONVERT_ID:
+                case ID:
                     id = reader.next();
                     break;
                 case CONVERT_TIME_LIMIT:
@@ -111,6 +113,37 @@ public class CommandParser {
             id,
             timeLimit,
             useLimit,
+            new URIShortenerInteractor(userStorage)
+        );
+    }
+
+    private OpenCommand createOpenCommand(Scanner reader) {
+        String shortURI = reader.next();
+        String user = null;
+        String id = null;
+
+        while (
+            reader.hasNext(USER)
+            || reader.hasNext(ID)
+        ) {
+            try {
+                switch (reader.next()) {
+                case USER:
+                    user = reader.next();
+                    break;
+                case ID:
+                    id = reader.next();
+                    break;
+                }
+            } catch (Exception e) {
+                continue;
+            }
+        }
+
+        return new OpenCommand(
+            shortURI,
+            user,
+            id,
             new URIShortenerInteractor(userStorage)
         );
     }

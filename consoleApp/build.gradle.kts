@@ -18,3 +18,23 @@ dependencies {
 application {
     mainClass = "com.castlelecs.consoleApp.App"
 }
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = application.mainClass
+    }
+}
+
+tasks.register("printJar") {
+    group = "Application"
+    description = "Creates JAR and prints the command to run it"
+
+    dependsOn(tasks.jar)
+
+    doLast {
+        val jarFile = tasks.getByName("jar").outputs.files.singleFile
+
+        println("java -jar ${jarFile.path}")
+    }
+}
+

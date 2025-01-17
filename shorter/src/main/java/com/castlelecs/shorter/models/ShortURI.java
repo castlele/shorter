@@ -1,5 +1,8 @@
 package com.castlelecs.shorter.models;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class ShortURI {
 
     private String shortURI;
@@ -7,8 +10,9 @@ public class ShortURI {
     private int useLimit;
     private int timeLimit;
 
-    private dateCreated;
+    private Date dateCreated;
     private int usage;
+    private Calendar calendar = Calendar.getInstance();
 
     public ShortURI(String shortURI, String longURI, int useLimit, int timeLimit) {
         this.shortURI = shortURI;
@@ -16,6 +20,7 @@ public class ShortURI {
         this.useLimit = useLimit;
         this.timeLimit = timeLimit;
 
+        this.dateCreated = new Date();
         this.usage = this.useLimit;
     }
 
@@ -36,10 +41,16 @@ public class ShortURI {
     }
 
     public void decreaseUsage() {
+        if (usage == 0) return;
         usage -= 1;
     }
 
     public boolean isExpired() {
-        return usage <= 0;
+        if (usage == -1 && timeLimit == -1) return false;
+
+        calendar.setTime(dateCreated);
+        calendar.add(Calendar.DATE, timeLimit);
+
+        return usage <= 0 || calendar.getTime().before(new Date());
     }
 }

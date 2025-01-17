@@ -51,6 +51,17 @@ public class URIShortenerInteractorTests {
 
                 storage.put(user, uris);
             }
+
+            @Override
+            public ShortURI getShortURI(String shortURI, User user) {
+                for (ShortURI uri : storage.get(user)) {
+                    if (uri.getShortURI() == shortURI) {
+                        return uri;
+                    }
+                }
+
+                return null;
+            }
         };
     }
 

@@ -3,8 +3,7 @@ package com.castlelecs.shorter.interactors;
 import com.castlelecs.shorter.models.User;
 
 public interface UsersDataStore {
-
-    void saveUser(User user);
-    User getUserByName(String name);
-    User getUserById(String id);
+    public void saveUser(User user);
+    public User getUserByName(String name);
+    public User getUserById(String id);
 }

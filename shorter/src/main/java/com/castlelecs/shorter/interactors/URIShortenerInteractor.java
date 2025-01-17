@@ -34,6 +34,17 @@ public class URIShortenerInteractor {
 
                 storage.put(user, uris);
             }
+
+            @Override
+            public ShortURI getShortURI(String shortURI, User user) {
+                for (ShortURI uri : storage.get(user)) {
+                    if (uri.getShortURI() == shortURI) {
+                        return uri;
+                    }
+                }
+
+                return null;
+            }
         }, usersDataStore);
     }
 
@@ -65,6 +76,24 @@ public class URIShortenerInteractor {
         String name,
         String uuid
     ) throws URIShortenerException {
+        User user = getUser(name, uuid);
+
+        saveURI(uri, user);
+    }
+
+    public void saveURI(ShortURI uri, User user) {
+        uriDataStore.saveURI(uri, user);
+    }
+
+    public ShortURI getShortURI(
+        String shortURI,
+        String name,
+        String uuid
+    ) throws URIShortenerException {
+        return uriDataStore.getShortURI(shortURI, getUser(name, uuid));
+    }
+
+    private User getUser(String name, String uuid) throws URIShortenerException {
         User user = null;
 
         if (name != null) {
@@ -77,19 +106,10 @@ public class URIShortenerInteractor {
             user = usersDataStore.getUserById(uuid);
         }
 
-
         if (user == null) {
             throw new URIShortenerException.NoUserForURI();
         }
 
-        saveURI(uri, user);
-    }
-
-    public void saveURI(ShortURI uri, User user) {
-        uriDataStore.saveURI(uri, user);
-    }
-
-    public ShortURI getShortURI(String shortURI) {
-        return uriDataStore.getShortURI(shortURI);
+        return user;
     }
 }
