@@ -88,4 +88,8 @@ public class URIShortenerInteractor {
     public void saveURI(ShortURI uri, User user) {
         uriDataStore.saveURI(uri, user);
     }
+
+    public ShortURI getShortURI(String shortURI) {
+        return uriDataStore.getShortURI(shortURI);
+    }
 }

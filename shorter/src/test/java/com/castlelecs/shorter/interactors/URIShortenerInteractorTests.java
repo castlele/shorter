@@ -21,7 +21,7 @@ public class URIShortenerInteractorTests {
         User user = createUser();
         Map<User, List<ShortURI>> storage = new HashMap<>();
         URIDataStore dataStore = createDataStore(storage);
-        URIShortenerInteractor sut = new URIShortenerInteractor(dataStore);
+        URIShortenerInteractor sut = new URIShortenerInteractor(dataStore, createUsersDataStore());
         ShortURI result = sut.createURI(longURI);
 
         sut.saveURI(result, user);
@@ -50,6 +50,39 @@ public class URIShortenerInteractorTests {
                 uris.add(uri);
 
                 storage.put(user, uris);
+            }
+        };
+    }
+
+    private UsersDataStore createUsersDataStore() {
+        return new UsersDataStore() {
+            private List<User> storage = new ArrayList<>();
+
+            @Override
+            public void saveUser(User user) {
+                storage.add(user);
+            }
+
+            @Override
+            public User getUserByName(String name) {
+                for (User user : storage) {
+                    if (user.getShortName() == name) {
+                        return user;
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            public User getUserById(String id) {
+                for (User user : storage) {
+                    if (user.getId() == id) {
+                        return user;
+                    }
+                }
+
+                return null;
             }
         };
     }

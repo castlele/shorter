@@ -7,11 +7,16 @@ public class ShortURI {
     private int useLimit;
     private int timeLimit;
 
+    private dateCreated;
+    private int usage;
+
     public ShortURI(String shortURI, String longURI, int useLimit, int timeLimit) {
         this.shortURI = shortURI;
         this.longURI = longURI;
         this.useLimit = useLimit;
         this.timeLimit = timeLimit;
+
+        this.usage = this.useLimit;
     }
 
     public String getShortURI() {
@@ -28,5 +33,13 @@ public class ShortURI {
 
     public int getLifeTime() {
         return timeLimit;
+    }
+
+    public void decreaseUsage() {
+        usage -= 1;
+    }
+
+    public boolean isExpired() {
+        return usage <= 0;
     }
 }

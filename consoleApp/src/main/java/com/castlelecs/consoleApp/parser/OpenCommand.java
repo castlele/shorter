@@ -4,19 +4,15 @@ import com.castlelecs.shorter.interactors.URIShortenerException;
 import com.castlelecs.shorter.interactors.URIShortenerInteractor;
 import com.castlelecs.shorter.models.ShortURI;
 
-public class ConvertCommand implements Command {
+public class OpenCommand implements Command {
 
-    private String longURI;
-    private String name;
-    private String id;
+    private String shortURI;
     private int timeLimit;
     private int useLimit;
     private URIShortenerInteractor interactor;
 
-    public ConvertCommand(
-        String longURI,
-        String name,
-        String id,
+    public OpenCommand(
+        String shortURI,
         int timeLimit,
         int useLimit,
         URIShortenerInteractor interactor
@@ -29,16 +25,8 @@ public class ConvertCommand implements Command {
         this.interactor = interactor;
     }
 
-    public String getLongURI() {
-        return longURI;
-    }
-
-    public String getUserName() {
-        return name;
-    }
-
-    public String getUserId() {
-        return id;
+    public String getShortURI() {
+        return shortURI;
     }
 
     public int getTimeLimit() {
@@ -51,12 +39,13 @@ public class ConvertCommand implements Command {
 
     @Override
     public int getId() {
-        return 1;
+        return 2;
     }
 
     @Override
     public void execute() throws URIShortenerException {
-        ShortURI shortURI = interactor.createURI(longURI, useLimit, timeLimit);
-        interactor.saveURI(shortURI, name, id);
+        ShortURI uri = interactor.getShortURI(getShortURI());
+
+        uri.getLongURI();
     }
 }

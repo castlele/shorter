@@ -19,6 +19,8 @@ public class CommandParser {
     private static final String CONVERT_ID = "--id";
     private static final String CONVERT_TIME_LIMIT = "--timelimit";
     private static final String CONVERT_USE_LIMIT = "--uselimit";
+    private static final String CONVERT_IS_OPEN = "--open";
+    private static final String OPEN = "open";
 
     private UsersDataStore userStorage;
 
